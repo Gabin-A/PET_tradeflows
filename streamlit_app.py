@@ -1,11 +1,9 @@
-
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
 # ---- Load Data ----
 @st.cache_data
-
 def load_data():
     df = pd.read_excel("Allcountries_export_WITS.xlsx", sheet_name="By-HS6Product")
     df = df[
@@ -60,9 +58,7 @@ merged['Size'] = merged['Total_Trade']**0.5 / 100
 
 merged['Lat'] = merged['Partner'].map(lambda c: COUNTRY_COORDS.get(c, (None, None))[0])
 merged['Lon'] = merged['Partner'].map(lambda c: COUNTRY_COORDS.get(c, (None, None))[1])
-
 merged['Text'] = merged.apply(lambda r: f"{r['Partner']}<br>Export: {r['Export_Quantity']:,.0f} Kg<br>Import: {r['Import_Quantity']:,.0f} Kg<br>Balance: {r['Balance']:,.0f} Kg", axis=1)
-
 merged = merged.dropna(subset=['Lat', 'Lon'])
 
 # ---- Plot Map ----
@@ -77,7 +73,7 @@ fig.add_trace(go.Scattergeo(
     hoverinfo='text'
 ))
 
-# Add home country markers
+# Mark origin countries
 for country in selected:
     if country in COUNTRY_COORDS:
         lat, lon = COUNTRY_COORDS[country]
@@ -100,3 +96,4 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
